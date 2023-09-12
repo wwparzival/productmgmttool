@@ -82,7 +82,7 @@ class CsvFileAccess(DatabaseAccess):
         list
         """
 
-        current_customers = self.read_all("data/dataset.csv")
+        current_customers = self.read_all(self.path + "/data/dataset.csv")
 
         unused_index = False
         new_id = 1
@@ -105,12 +105,12 @@ class CsvFileAccess(DatabaseAccess):
         result = [False, -1]
 
         try:
-            if not os.path.isfile("data/dataset.csv"):
+            if not os.path.isfile(self.path + "/data/dataset.csv"):
                 # Set to 0 for file error
                 result[1] = 0
                 raise Exception("File doesn't exist")
             else:
-                new_customer.to_csv("data/dataset.csv", mode="a", header=False, index=False)
+                new_customer.to_csv(self.path + "/data/dataset.csv", mode="a", header=False, index=False)
                 result[0] = True
         finally:
             return result
@@ -138,12 +138,12 @@ class CsvFileAccess(DatabaseAccess):
         result = [False, -1]
 
         try:
-            if not os.path.isfile("data/dataset.csv"):
+            if not os.path.isfile(self.path + "/data/dataset.csv"):
                 # Set to 0 for file error
                 result[1] = 0
                 raise Exception("File doesn't exist")
             else:
-                updated_customers.to_csv("data/dataset.csv", mode="w", header=True, index=False)
+                updated_customers.to_csv(self.path + "/data/dataset.csv", mode="w", header=True, index=False)
                 result[0] = True
         finally:
             return result
@@ -171,12 +171,12 @@ class CsvFileAccess(DatabaseAccess):
         result = [False, -1]
 
         try:
-            if not os.path.isfile("data/dataset.csv"):
+            if not os.path.isfile(self.path + "/data/dataset.csv"):
                 # Set to 0 for file error
                 result[1] = 0
                 raise Exception("File doesn't exist")
             else:
-                updated_customers.to_csv("data/dataset.csv", mode="w", header=True, index=False)
+                updated_customers.to_csv(self.path + "/data/dataset.csv", mode="w", header=True, index=False)
                 result[0] = True
         finally:
             return result

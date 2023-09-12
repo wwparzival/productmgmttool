@@ -43,7 +43,7 @@ class Controller:
     update_customer_view = 0
     delete_customer_view = 0
 
-    def __init__(self) -> None:
+    def __init__(self, path: str) -> None:
         """
         Parameters
         ----------
@@ -51,8 +51,10 @@ class Controller:
         """
 
         self.db_access = CsvFileAccess()
+        self.db_access.path = path
         self.login_view = LoginView(self.validate_login)
         self.login_view.show()
+        self.path = path
 
     def raise_main_view(self) -> None:
         """ Displays the main menu window.
@@ -95,7 +97,7 @@ class Controller:
         none
         """
 
-        self.show_customers_view = ShowCustomersView(self.db_access.read_all("data/dataset.csv"))
+        self.show_customers_view = ShowCustomersView(self.db_access.read_all(self.path + "/data/dataset.csv"))
         self.show_customers_view.switch_main.connect(self.raise_main_view)
         self.main_view.close()
         self.show_customers_view.show()
@@ -129,7 +131,7 @@ class Controller:
         none
         """
 
-        self.update_customer_view = UpdateCustomerView(self.update_customer, self.db_access.read_all("data/dataset.csv"))
+        self.update_customer_view = UpdateCustomerView(self.update_customer, self.db_access.read_all(self.path + "/data/dataset.csv"))
         self.update_customer_view.switch_main.connect(self.raise_main_view)
         self.main_view.close()
         self.update_customer_view.show()
@@ -146,7 +148,7 @@ class Controller:
         none
         """
 
-        self.delete_customer_view = DeleteCustomerView(self.delete_customer, self.db_access.read_all("data/dataset.csv"))
+        self.delete_customer_view = DeleteCustomerView(self.delete_customer, self.db_access.read_all(self.path + "/data/dataset.csv"))
         self.delete_customer_view.switch_main.connect(self.raise_main_view)
         self.main_view.close()
         self.delete_customer_view.show()
@@ -167,7 +169,8 @@ class Controller:
         none
         """
 
-        df_users = self.db_access.read_all("data/users.csv")
+        df_users = self.db_access.read_all(self.path + "/data/users.csv")
+
         # Get the row index of the user in the dataframe
         row_index = get_row_index(df_users["username"].map(str).to_list(), username)
 
@@ -209,7 +212,7 @@ class Controller:
         # Represents the status of the addition of the customer to the database.
         status = False
 
-        current_customers = self.db_access.read_all("data/dataset.csv")
+        current_customers = self.db_access.read_all(self.path + "/data/dataset.csv")
 
         # Customer name, customer numbers and a contract expiry date must be set
         if data["name"][0] and data["number"][0] and data["contract-expire"][0]:
@@ -337,7 +340,7 @@ class Controller:
             Represents the status, if the delete operation of the customer was successful or not.
         """
 
-        current_customers = self.db_access.read_all("data/dataset.csv")
+        current_customers = self.db_access.read_all(self.path + "/data/dataset.csv")
         # Get the row index, which contains
         row_id = get_row_index(current_customers["number"].map(str).to_list(), str(row_data[1]))
         updated_customers = current_customers.drop(row_id)
