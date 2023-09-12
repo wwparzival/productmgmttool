@@ -35,7 +35,7 @@ class ShowCustomersView(QWidget):
         QWidget.__init__(self)
 
         self.setWindowTitle("Show All Customers")
-        self.resize(820, 400)
+        self.resize(850, 400)
 
         layout = QGridLayout()
         
@@ -49,7 +49,7 @@ class ShowCustomersView(QWidget):
             "IMP - Version" : replace_nan(df_customer_data["imp"].map(str).to_list()),
             "CUC - Version" : replace_nan(df_customer_data["cuc"].map(str).to_list()),
             "EXP - Version" : replace_nan(df_customer_data["exp"].map(str).to_list()),
-            "Laufzeit" : df_customer_data["contract-expire"].map(str).to_list()
+            "Vertragsende" : df_customer_data["contract-expire"].map(str).to_list()
         }
 
         # Create a new table widget

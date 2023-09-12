@@ -104,7 +104,7 @@ class AddCustomerView(QWidget):
         layout.addWidget(self.ent_exp)
 
         # Label Widget for contract expiry date
-        lbl_contract = QLabel("Datum Vertragsende")
+        lbl_contract = QLabel("Vertragsende")
         layout.addWidget(lbl_contract)
 
         # Entry Widget for contract expiry date

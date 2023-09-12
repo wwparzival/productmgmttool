@@ -47,9 +47,7 @@ class Table(QTableWidget):
 
         table_headers = []
         
-        expire_dates = self.data["Laufzeit"]
-
-        #del self.data["Laufzeit"]
+        expire_dates = self.data["Vertragsende"]
         
         for col_nr, key in enumerate(self.data.keys()):
             # Adds each key of the dict

@@ -38,7 +38,7 @@ class DeleteCustomerView(QWidget):
         QWidget.__init__(self)
         
         self.setWindowTitle("Einen Kunden löschen")
-        self.resize(820, 400)
+        self.resize(910, 400)
         self.cb_del_customer = cb_delete_customer
 
         layout = QGridLayout()
@@ -55,7 +55,7 @@ class DeleteCustomerView(QWidget):
             "IMP - Version" : replace_nan(df_customer_data["imp"].map(str).to_list()),
             "CUC - Version" : replace_nan(df_customer_data["cuc"].map(str).to_list()),
             "EXP - Version" : replace_nan(df_customer_data["exp"].map(str).to_list()),
-            "Laufzeit" : df_customer_data["contract-expire"].map(str).to_list(),
+            "Vertragsende" : df_customer_data["contract-expire"].map(str).to_list(),
             "Button" : df_customer_data["button"].to_list()
         }
 

@@ -39,7 +39,7 @@ class UpdateCustomerView(QWidget):
         QWidget.__init__(self)
 
         self.setWindowTitle("Einen Kunden bearbeiten")
-        self.resize(820, 400)
+        self.resize(850, 400)
         self.cb_update_customer = cb_update_customer
 
         layout = QGridLayout()
@@ -54,7 +54,7 @@ class UpdateCustomerView(QWidget):
             "IMP - Version" : replace_nan(self.df_customer_data["imp"].map(str).to_list()),
             "CUC - Version" : replace_nan(self.df_customer_data["cuc"].map(str).to_list()),
             "EXP - Version" : replace_nan(self.df_customer_data["exp"].map(str).to_list()),
-            "Laufzeit" : self.df_customer_data["contract-expire"].map(str).to_list()
+            "Vertragsende" : self.df_customer_data["contract-expire"].map(str).to_list()
         }
 
         # Create a new table widget
