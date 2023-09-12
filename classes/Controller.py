@@ -47,7 +47,8 @@ class Controller:
         """
         Parameters
         ----------
-        None
+        path : str
+            The absolute path of the working directory.
         """
 
         self.db_access = CsvFileAccess()
