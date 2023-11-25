@@ -13,7 +13,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     
     # set stylesheet
-    file = QFile(dir_path + "\styles/Ubuntu.qss")
+    file = QFile(dir_path + "/styles/Ubuntu.qss")
     file.open(QFile.ReadOnly | QFile.Text)
     stream = QTextStream(file)
     app.setStyleSheet(stream.readAll())
