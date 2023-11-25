@@ -1,6 +1,7 @@
 # Standard classes / libraries
-from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton
+import sys
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QMessageBox
 
 class MainView(QWidget):
     """ A class used to represent the Main View.
@@ -15,12 +16,15 @@ class MainView(QWidget):
         Displays the "Update a customer" window.
     raise_delete_customer()
         Displays the "Delete customers" window.
+    logout()
+        Logs the user out of the application, to return to the LoginView.
     """
 
     switch_show_customers = pyqtSignal()
     switch_add_customer = pyqtSignal()
     switch_update_customer = pyqtSignal()
     switch_delete_customer = pyqtSignal()
+    switch_logout = pyqtSignal()
 
     def __init__(self, privilege):
         """
@@ -37,7 +41,7 @@ class MainView(QWidget):
         QWidget.__init__(self)
 
         self.setWindowTitle("Kundendatenbank")
-
+        self.resize(400, 200)
         layout = QGridLayout()
 
         # Button to show the show customers view
@@ -62,9 +66,14 @@ class MainView(QWidget):
             btn_delete_customer.clicked.connect(self.raise_delete_customer)
             layout.addWidget(btn_delete_customer)
 
+        # Button to logout
+        btn_logout = QPushButton("Logout")
+        btn_logout.clicked.connect(self.logout)
+        layout.addWidget(btn_logout)
+
         # Button to close the application
         btn_quit = QPushButton("Beenden")
-        btn_quit.clicked.connect(self.close)
+        btn_quit.clicked.connect(sys.exit)
         layout.addWidget(btn_quit)
 
         # Arrange the layout of the widgets
@@ -125,3 +134,31 @@ class MainView(QWidget):
         """
         
         self.switch_delete_customer.emit()
+
+    def logout(self):
+        """ Logs the user out of the application, to return to the LoginView.
+
+        Parameters
+        ----------
+        none
+
+        Return
+        ----------
+        none
+        """
+        
+        # Runs and displays the MessageBox, as long as the user acknowledges the popup window
+        ack = False
+        while not ack:
+            choice = QMessageBox.question(
+                None,
+                " ",
+                "Bitte den Logout bestätigen.",
+                QMessageBox.Ok,
+                QMessageBox.Cancel
+            )
+            if choice == QMessageBox.Ok:
+                ack = True
+                self.switch_logout.emit()
+            if choice == QMessageBox.Cancel:
+                ack = True

@@ -1,4 +1,5 @@
 # Standard classes / libraries
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 from PyQt5.QtGui import QColor
 from datetime import datetime
@@ -30,6 +31,8 @@ class Table(QTableWidget):
 
         self.data = data
         self.set_data()
+        self.setSortingEnabled(True)
+        self.sortByColumn(0, Qt.AscendingOrder)
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
  
@@ -47,8 +50,6 @@ class Table(QTableWidget):
 
         table_headers = []
         
-        expire_dates = self.data["Vertragsende"]
-        
         for col_nr, key in enumerate(self.data.keys()):
             # Adds each key of the dict
             table_headers.append(key)
@@ -56,17 +57,20 @@ class Table(QTableWidget):
                 newitem = QTableWidgetItem(content)
                 self.setItem(row_nr, col_nr, newitem)
         
-        # Mark the customer name cells with a color, corresponding to the contract expiry date
-        for idx, expire_date in enumerate(expire_dates):
-            # "Red" if contract is expired
-            if (datetime.strptime(expire_date, "%d/%m/%Y") - datetime.now()).days <= 0:
-                self.item(idx, 0).setBackground(QColor("#ff6961"))
-            # "Yellow" if the contract expires in the next year
-            elif (datetime.strptime(expire_date, "%d/%m/%Y") - datetime.now()).days <= 365:
-                self.item(idx, 0).setBackground(QColor("#fdfd96"))
-            # "Green" if contract runs longer than a year
-            else:
-                self.item(idx, 0).setBackground(QColor("#77dd77"))
+        if "Vertragsende" in self.data:
+            expire_dates = self.data["Vertragsende"]
+
+            # Mark the customer name cells with a color, corresponding to the contract expiry date
+            for idx, expire_date in enumerate(expire_dates):
+                # "Red" if contract is expired
+                if (datetime.strptime(expire_date, "%d/%m/%Y") - datetime.now()).days <= 0:
+                    self.item(idx, 0).setBackground(QColor("#ff6961"))
+                # "Yellow" if the contract expires in the next year
+                elif (datetime.strptime(expire_date, "%d/%m/%Y") - datetime.now()).days <= 365:
+                    self.item(idx, 0).setBackground(QColor("#fdfd96"))
+                # "Green" if contract runs longer than a year
+                else:
+                    self.item(idx, 0).setBackground(QColor("#77dd77"))
 
         # Adds the headers to the table
         self.setHorizontalHeaderLabels(table_headers)

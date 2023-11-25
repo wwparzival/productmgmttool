@@ -1,7 +1,8 @@
 # Standard classes / libraries
+import sys
 import pandas as pd
-from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QMessageBox
 
 # Custom classes / libraries
 from classes.Table import *
@@ -15,9 +16,12 @@ class ShowCustomersView(QWidget):
     -------
     raise_main()
         Switches back to the main menu.
+    logout()
+        Logs the user out of the application, to return to the LoginView.
     """
 
     switch_main = pyqtSignal()
+    switch_logout = pyqtSignal()
 
     def __init__(self, customer_data: pd.DataFrame) -> None:
         """ Initiats the Add customer view.
@@ -62,8 +66,13 @@ class ShowCustomersView(QWidget):
         layout.addWidget(btn_main)
 
         # Button to close the application
+        btn_logout = QPushButton("Logout")
+        btn_logout.clicked.connect(self.logout)
+        layout.addWidget(btn_logout)
+
+        # Button to close the application
         btn_quit = QPushButton("Beenden")
-        btn_quit.clicked.connect(self.close)
+        btn_quit.clicked.connect(sys.exit)
         layout.addWidget(btn_quit)
 
         # Arrange the layout of the widgets
@@ -82,3 +91,31 @@ class ShowCustomersView(QWidget):
         """
 
         self.switch_main.emit()
+
+    def logout(self) -> None:
+        """ Logs the user out of the application, to return to the LoginView.
+        
+        Parameters
+        ----------
+        none
+
+        Return
+        ----------
+        none
+        """
+
+        # Runs and displays the MessageBox, as long as the user acknowledges the popup window
+        ack = False
+        while not ack:
+            choice = QMessageBox.question(
+                None,
+                " ",
+                "Bitte den Logout bestätigen.",
+                QMessageBox.Ok,
+                QMessageBox.Cancel
+            )
+            if choice == QMessageBox.Ok:
+                ack = True
+                self.switch_logout.emit()
+            if choice == QMessageBox.Cancel:
+                ack = True

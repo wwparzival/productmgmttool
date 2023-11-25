@@ -11,6 +11,7 @@ from classes.ShowCustomersView import *
 from classes.AddCustomerView import *
 from classes.UpdateCustomerView import *
 from classes.DeleteCustomerView import *
+from classes.SecurityIssuesView import *
 from classes.helper import get_row_index
 
 class Controller:
@@ -18,6 +19,8 @@ class Controller:
 
     Methods
     -------
+    raise_login_view()
+        Displays the login window.
     raise_main_view()
         Displays the main menu window.
     raise_customers_view()
@@ -48,14 +51,42 @@ class Controller:
         Parameters
         ----------
         path : str
-            The absolute path of the working directory.
+            The absolute path of the working directory
         """
 
         self.db_access = CsvFileAccess()
         self.db_access.path = path
+
         self.login_view = LoginView(self.validate_login)
         self.login_view.show()
         self.path = path
+        self.security_view_raised = False
+
+    def raise_login_view(self) -> None:
+        """ Displays the login window.
+
+        Parameters
+        ----------
+        none
+
+        Return
+        ----------
+        none
+        """
+
+        self.login_view = LoginView(self.validate_login)
+
+        if self.main_view != 0:
+            self.main_view.close()
+        if self.show_customers_view != 0:
+            self.show_customers_view.close()
+        if self.add_customer_view != 0:
+            self.add_customer_view.close()
+        if self.update_customer_view != 0:
+            self.update_customer_view.close()
+        if self.delete_customer_view != 0:
+            self.delete_customer_view.close()
+        self.login_view.show()
 
     def raise_main_view(self) -> None:
         """ Displays the main menu window.
@@ -74,6 +105,8 @@ class Controller:
         self.main_view.switch_add_customer.connect(self.raise_add_customer_view)
         self.main_view.switch_update_customer.connect(self.raise_update_customer_view)
         self.main_view.switch_delete_customer.connect(self.raise_delete_customer_view)
+        self.main_view.switch_logout.connect(self.raise_login_view)
+    
         if self.login_view != 0:
             self.login_view.close()
         if self.show_customers_view != 0:
@@ -84,7 +117,13 @@ class Controller:
             self.update_customer_view.close()
         if self.delete_customer_view != 0:
             self.delete_customer_view.close()
+
         self.main_view.show()
+
+        if self.security_view_raised == False:
+            self.security_view_raised = True
+            self.security_view = SecurityIssuesView()
+            self.security_view.show()
 
     def raise_customers_view(self) -> None:
         """ Displays the "Show all customers" window.
@@ -100,6 +139,7 @@ class Controller:
 
         self.show_customers_view = ShowCustomersView(self.db_access.read_all(self.path + "/data/dataset.csv"))
         self.show_customers_view.switch_main.connect(self.raise_main_view)
+        self.show_customers_view.switch_logout.connect(self.raise_login_view)
         self.main_view.close()
         self.show_customers_view.show()
 
@@ -117,6 +157,7 @@ class Controller:
 
         self.add_customer_view = AddCustomerView(self.add_new_customer)
         self.add_customer_view.switch_main.connect(self.raise_main_view)
+        self.add_customer_view.switch_logout.connect(self.raise_login_view)
         self.main_view.close()
         self.add_customer_view.show()
 
@@ -134,6 +175,7 @@ class Controller:
 
         self.update_customer_view = UpdateCustomerView(self.update_customer, self.db_access.read_all(self.path + "/data/dataset.csv"))
         self.update_customer_view.switch_main.connect(self.raise_main_view)
+        self.update_customer_view.switch_logout.connect(self.raise_login_view)
         self.main_view.close()
         self.update_customer_view.show()
 
@@ -151,6 +193,7 @@ class Controller:
 
         self.delete_customer_view = DeleteCustomerView(self.delete_customer, self.db_access.read_all(self.path + "/data/dataset.csv"))
         self.delete_customer_view.switch_main.connect(self.raise_main_view)
+        self.delete_customer_view.switch_logout.connect(self.raise_login_view)
         self.main_view.close()
         self.delete_customer_view.show()
 

@@ -1,7 +1,8 @@
 # Standard classes / libraries
+import sys
 import pandas as pd
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.QtCore import pyqtSignal, QRegExp
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 from PyQt5.QtGui import QRegExpValidator
 
 class AddCustomerView(QWidget):
@@ -14,9 +15,13 @@ class AddCustomerView(QWidget):
         Switches back to the main menu.
     add_new_customer()
         Takes the values of the input widgets and calls the callback function to save the new customer.
+    logout()
+        Logs the user out of the application, to return to the LoginView.
     """
 
     switch_main = pyqtSignal()
+    switch_logout = pyqtSignal()
+
     regex_name = QRegExp("^.{1,30}$")
     regex_number = QRegExp("^[0-9]{1,5}$")
     regex_uc_version = QRegExp("^[0-9]{2}\.[0-9]\.[0-9]\.[0-9]{5}\-[0-9]{2}$")
@@ -124,8 +129,13 @@ class AddCustomerView(QWidget):
         layout.addWidget(btn_main)
 
         # Button to close the application
+        btn_logout = QPushButton("Logout")
+        btn_logout.clicked.connect(self.logout)
+        layout.addWidget(btn_logout)
+
+        # Button to close the application
         btn_quit = QPushButton("Beenden")
-        btn_quit.clicked.connect(self.close)
+        btn_quit.clicked.connect(sys.exit)
         layout.addWidget(btn_quit)
 
         # Arrange the layout of the widgets
@@ -181,3 +191,31 @@ class AddCustomerView(QWidget):
             self.ent_cuc.setText("")
             self.ent_exp.setText("")
             self.ent_contract.setText("")
+
+    def logout(self) -> None:
+        """ Logs the user out of the application, to return to the LoginView.
+        
+        Parameters
+        ----------
+        none
+
+        Return
+        ----------
+        none
+        """
+
+        # Runs and displays the MessageBox, as long as the user acknowledges the popup window
+        ack = False
+        while not ack:
+            choice = QMessageBox.question(
+                None,
+                " ",
+                "Bitte den Logout bestätigen.",
+                QMessageBox.Ok,
+                QMessageBox.Cancel
+            )
+            if choice == QMessageBox.Ok:
+                ack = True
+                self.switch_logout.emit()
+            if choice == QMessageBox.Cancel:
+                ack = True

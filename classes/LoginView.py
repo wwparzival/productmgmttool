@@ -1,6 +1,6 @@
 # Standard classes / libraries
+import sys
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QLineEdit, QPushButton
-from PyQt5.QtWidgets import QMessageBox
 
 class LoginView(QWidget):
     """
@@ -51,7 +51,7 @@ class LoginView(QWidget):
 
         # Button to close the application
         btn_quit = QPushButton("Beenden")
-        btn_quit.clicked.connect(self.close)
+        btn_quit.clicked.connect(sys.exit)
         layout.addWidget(btn_quit)
 
         # Arrange the layout of the widgets
